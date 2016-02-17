@@ -8,35 +8,54 @@ import urllib
 
 from bs4 import BeautifulSoup
 
-link = "http://www.oxfordlearnersdictionaries.com/wordlist/english/oxford3000/"
-links = { link : [link]}
+wordlist = {}
 
-# Reading all urls with words
-# This part is opens first page and populates the map with links
+def main():
 
-page = urllib.urlopen(link).read()
- 
-soup_page = BeautifulSoup(page, "html.parser").find('div', id='entries-selector')
+	start_link = "http://www.oxfordlearnersdictionaries.com/wordlist/english/oxford3000/"
+	links = { start_link : [start_link]}
 
-tags_with_url = soup_page.find_all('a')
+	# Reading all urls with words
+	# This part is opens first page and populates the map with links
 
-for tag in tags_with_url:
-	links[tag['href']] = [tag['href']]
+	page = urllib.urlopen(start_link).read()
+	 
+	soup_page = BeautifulSoup(page, "html.parser").find('div', id='entries-selector')
 
-#
-# print(len(links))
+	tags_with_url = soup_page.find_all('a')
 
-# now we are reading all pages for letter range
-# exploring all links 
-for link in links:	
+	for tag in tags_with_url:
+		links[tag['href']] = [tag['href']]
+
+	#
+	# print(len(links))
+
+	# now we are reading all pages for letter range
+	# exploring all links 
+	for link in links:	
+		page = urllib.urlopen(link).read()
+		soup_page = BeautifulSoup(page, "html.parser").find('div', id='paging')
+		tags_with_url = soup_page.find_all('a')
+		for tag in tags_with_url:
+			links[link].append(tag['href'])
+		
+	# print(links)
+	# running all links
+	for link_array in links:
+		for link in links[link_array]:
+			print(link)
+
+def parseHTML(link):
 	page = urllib.urlopen(link).read()
-	soup_page = BeautifulSoup(page, "html.parser").find('div', id='paging')
+	soup_page = BeautifulSoup(page, "html.parser").find('div', id='entrylist1')
 	tags_with_url = soup_page.find_all('a')
 	for tag in tags_with_url:
-		links[link].append(tag['href'])
-	
-# print(links)
-# running all links
-for link_array in links:
-	for link in links[link_array]:
-		print(link)
+		words = tag.contents[0].split()		
+		for word in words:
+			print(word)
+			wordlist[word] = None
+
+parseHTML("http://www.oxfordlearnersdictionaries.com/wordlist/english/oxford3000/");
+
+print(wordlist)
+print(len(wordlist))
