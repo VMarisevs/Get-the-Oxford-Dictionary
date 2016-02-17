@@ -10,9 +10,9 @@ from bs4 import BeautifulSoup
 
 wordlist = {}
 
-def main():
+def main(start_link):
 
-	start_link = "http://www.oxfordlearnersdictionaries.com/wordlist/english/oxford3000/"
+	#start_link = "http://www.oxfordlearnersdictionaries.com/wordlist/english/oxford3000/"
 	links = { start_link : [start_link]}
 
 	# Reading all urls with words
@@ -71,6 +71,22 @@ def writeMapToFile(words):
 # main function explores all urls and then goes through and populates the word map
 # and then writes whole map into file
 
-main()
+links = [
+	"http://www.oxfordlearnersdictionaries.com/wordlist/english/oxford3000/"
+	,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/oxford3000/"
+	,"http://www.oxfordlearnersdictionaries.com/wordlist/english/academic/"
+	,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/academic/"
+	,"http://www.oxfordlearnersdictionaries.com/wordlist/english/pictures/"
+	,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/pictures/"
+	,"http://www.oxfordlearnersdictionaries.com/wordlist/english/usage_notes/"
+	,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/usage_notes/"
+	]
+
+for link in links:
+	main(link)
+
+print("word map is created with " + str(len(wordlist)) + "words.")
 
 writeMapToFile(wordlist)
+
+print("list of words saved into file")
