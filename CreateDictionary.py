@@ -43,19 +43,34 @@ def main():
 	# running all links
 	for link_array in links:
 		for link in links[link_array]:
-			print(link)
+			#print(link)
+			parseHTML(link)
 
 def parseHTML(link):
 	page = urllib.urlopen(link).read()
 	soup_page = BeautifulSoup(page, "html.parser").find('div', id='entrylist1')
 	tags_with_url = soup_page.find_all('a')
 	for tag in tags_with_url:
-		words = tag.contents[0].split()		
+		# now it is ignoring non ASCII chars and makes all lowercase and splits into separate words
+		words = tag.contents[0].encode('ascii',errors='ignore').lower().split()		
 		for word in words:
 			print(word)
+			# !ERROR! UnicodeEncodeError: 'charmap' codec can't encode character u'\u2019' in position
+			# can't create a map with "o'clock" key
+			# http://stackoverflow.com/questions/8689795/how-can-i-remove-non-ascii-characters-but-leave-periods-and-spaces-using-python
 			wordlist[word] = None
 
-parseHTML("http://www.oxfordlearnersdictionaries.com/wordlist/english/oxford3000/");
+			
+def writeMapToFile(words):
+	file = open('ListOfWords.txt', 'w')
+	
+	for word in words:
+		file.write(word + "\n")
+	file.close()
+	
+# main function explores all urls and then goes through and populates the word map
+# and then writes whole map into file
 
-print(wordlist)
-print(len(wordlist))
+main()
+
+writeMapToFile(wordlist)
