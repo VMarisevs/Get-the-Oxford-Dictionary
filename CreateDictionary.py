@@ -54,7 +54,7 @@ def parseHTML(link):
 		# now it is ignoring non ASCII chars and makes all lowercase and splits into separate words
 		words = tag.contents[0].encode('ascii',errors='ignore').lower().split()		
 		for word in words:
-			print(word)
+			# print(word)
 			# !ERROR! UnicodeEncodeError: 'charmap' codec can't encode character u'\u2019' in position
 			# can't create a map with "o'clock" key
 			# http://stackoverflow.com/questions/8689795/how-can-i-remove-non-ascii-characters-but-leave-periods-and-spaces-using-python
@@ -62,7 +62,7 @@ def parseHTML(link):
 
 			
 def writeMapToFile(words):
-	file = open('ListOfWords.txt', 'w')
+	file = open('words.txt', 'w')
 	
 	for word in words:
 		file.write(word + "\n")
@@ -70,23 +70,25 @@ def writeMapToFile(words):
 	
 # main function explores all urls and then goes through and populates the word map
 # and then writes whole map into file
+if __name__ == "__main__":
+	print "Sorry for delay, this scripts explores links, and parses html pages to get word list\n"
+	links = [
+		"http://www.oxfordlearnersdictionaries.com/wordlist/english/oxford3000/"
+		,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/oxford3000/"
+		,"http://www.oxfordlearnersdictionaries.com/wordlist/english/academic/"
+		,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/academic/"
+		,"http://www.oxfordlearnersdictionaries.com/wordlist/english/pictures/"
+		,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/pictures/"
+		,"http://www.oxfordlearnersdictionaries.com/wordlist/english/usage_notes/"
+		,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/usage_notes/"
+		]
 
-links = [
-	"http://www.oxfordlearnersdictionaries.com/wordlist/english/oxford3000/"
-	,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/oxford3000/"
-	,"http://www.oxfordlearnersdictionaries.com/wordlist/english/academic/"
-	,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/academic/"
-	,"http://www.oxfordlearnersdictionaries.com/wordlist/english/pictures/"
-	,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/pictures/"
-	,"http://www.oxfordlearnersdictionaries.com/wordlist/english/usage_notes/"
-	,"http://www.oxfordlearnersdictionaries.com/wordlist/american_english/usage_notes/"
-	]
+	for link in links:
+		print "exploring all sublinks in:\n\t " + link
+		main(link)
 
-for link in links:
-	main(link)
+	print "word map is created with " + str(len(wordlist)) + "words."
 
-print("word map is created with " + str(len(wordlist)) + "words.")
+	writeMapToFile(wordlist)
 
-writeMapToFile(wordlist)
-
-print("list of words saved into file")
+	print("list of words saved into file")
